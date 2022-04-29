@@ -1,56 +1,40 @@
 package com.bondarenko.filemanager;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class FileManager {
-    // public static int countFiles(String path) - принимает путь к папке,
-// возвращает количество файлов в папке и всех подпапках по пути
 
     public static int countFiles(String path) {
-        File file = new File(path);
-        int countFiles = 0;
-        try {
-            for (File element : file.listFiles()) {
-                if (element.isFile()) {
-                    countFiles++;
-                } else {
-                    int count = countFiles(element.toString());
-                    if (count != 0) {
-                        countFiles = countFiles + count;
-                    }
-                }
+        int count = 0;
+        File dir = new File(path);
+        for (File file : dir.listFiles()) {
+            if (file.isDirectory()) {
+                count += countFiles(file.getAbsolutePath());
+            } else {
+                count++;
             }
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("File is not found", e);
         }
-        return countFiles;
+        return count;
     }
 
     public static int countDirs(String path) {
-        File folder = new File(path);
         int countDirs = 0;
-        for (File element : folder.listFiles()) {
+        File dir = new File(path);
+        for (File element : dir.listFiles()) {
             if (element.isDirectory()) {
                 countDirs++;
-                int count = countDirs(element.toString());
-            }
-            if (countDirs != 0) {
-                countDirs = countDirs + countDirs;
+                countDirs += countDirs(element.toString());
             }
         }
         return countDirs;
     }
 
-    // Параметр from - путь к файлу или папке, параметр to - путь к папке куда будет производиться перемищение.
-    public void move(String from, String to) {
-        File pathFrom = new File(from);
-        File pathTo = new File(to, pathFrom.getName());
-        pathFrom.renameTo(pathTo);
-    }
-
     public void copy(String from, String to) {
         File pathFrom = new File(from);
-        File pathTo = new File(to, pathFrom.getName());//вертає назву файла, папки з вказаним шляхом
+        File pathTo = new File(to, pathFrom.getName());
         try {
             if (pathFrom.isDirectory()) {
                 pathTo.mkdirs();
@@ -67,7 +51,7 @@ public class FileManager {
     }
 
     public void copyFile(File pathFrom, File pathTo) throws IOException {
-        int length = (int) pathFrom.length();//к-сть байтів
+        int length = (int) pathFrom.length();
         byte[] buffer = new byte[length];
         if (length != 0) {
             FileInputStream fileInputStream = new FileInputStream(pathFrom);
@@ -84,7 +68,14 @@ public class FileManager {
         }
     }
 
-    public void clean(File file){
+    // Параметр from - путь к файлу или папке, параметр to - путь к папке куда будет производиться перемищение.
+    public void move(String from, String to) {
+        File pathFrom = new File(from);
+        File pathTo = new File(to, pathFrom.getName());
+        pathFrom.renameTo(pathTo);
+    }
+
+    public void clean(File file) {
         File[] list = file.listFiles();
         checkNotNull(list);
         for (File files : list) {
@@ -104,7 +95,7 @@ public class FileManager {
     }
 }
 
-
+//принимает путь к папке, возвращает количество файлов в папке и всех подпапках по пути
 //public static int countDirs(String path) - принимает путь к папке,
 // возвращает количество папок в папке и всех подпапках по пути
 
