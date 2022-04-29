@@ -32,38 +32,31 @@ public class FileManager {
         return countDirs;
     }
 
-    public void copy(String from, String to) {
-        File pathFrom = new File(from);
-        File pathTo = new File(to, pathFrom.getName());
-        try {
-            if (pathFrom.isDirectory()) {
-                pathTo.mkdirs();
-                File[] files = pathFrom.listFiles();
-                for (File file : files) {
-                    copy(file.getAbsolutePath(), pathTo.getAbsolutePath());
-                }
-            } else if (pathFrom.isFile()) {
-                copyFile(pathFrom, pathTo);
-            }
-        } catch (Exception e) {
-            throw new IllegalArgumentException("File or directory is not found");
-        }
+    public static void copy(String from, String to) {
+        File fileToCopy = new File(from);
+        File fileCopied = new File(to);
+        copyFileOrDirs(fileToCopy, fileCopied);
     }
 
-    public void copyFile(File pathFrom, File pathTo) throws IOException {
-        int length = (int) pathFrom.length();
-        byte[] buffer = new byte[length];
-        if (length != 0) {
-            FileInputStream fileInputStream = new FileInputStream(pathFrom);
-            FileOutputStream fileOutputStream = new FileOutputStream(pathTo);
-            try {
-                fileInputStream.read(buffer);// чтение байтов из файла
-                fileOutputStream.write(buffer);//запись байтов в файл.
+    private static void copyFileOrDirs(File from, File to) {
+        if (from.isDirectory()) {
+            if (!to.exists()) {
+                to.mkdir();
+            }
+            String[] files = from.list();
+            for (int i = 0; i < files.length; i++) {
+                copyFileOrDirs(new File(from, files[i]), new File(to, files[i]));
+            }
+        } else {
+            try (FileInputStream fileInputStream = new FileInputStream(from);
+                 FileOutputStream fileOutputStream = new FileOutputStream(to)) {
+                int length = (int) from.length();
+                byte[] buffer = new byte[length];
+                while ((length = fileInputStream.read(buffer)) > 0) {
+                    fileOutputStream.write(buffer, 0, length);
+                }
             } catch (IOException exception) {
-                throw new IllegalArgumentException();
-            } finally {
-                fileInputStream.close();
-                fileOutputStream.close();
+                throw new RuntimeException("", exception);
             }
         }
     }
