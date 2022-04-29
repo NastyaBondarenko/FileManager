@@ -30,6 +30,7 @@ public class FileManagerTest {
     @AfterEach
     public void after() {
         fileManager.clean(new File("testDirectory"));
+        fileManager.clean(new File("testDirectory2"));
     }
 
     @Test
@@ -51,15 +52,24 @@ public class FileManagerTest {
     }
 
     @Test
-    public void testCopy() {
-        fileManager.copy("C:\\Users\\ihor_PC\\Desktop\\testnew\\папка1", "C:\\Users\\ihor_PC\\Desktop\\testnew\\папка2");
+    @DisplayName("when Copy File then Duplicated File Created")
+    public void whenCopyFile_thenDuplicatedFileCreated() {
+        String from = "testDirectory/src/dir1/dir2";
+        String to = "testDirectory2";
+
+        assertEquals(1, fileManager.countFiles(from));
+        assertEquals(0, fileManager.countFiles(to));
+
+        fileManager.copy(from, to);
+
+        assertEquals(1, fileManager.countFiles(from));
+        assertEquals(1, fileManager.countFiles(to));
     }
 
     @Test
     public void testMoveFilesOrDirs() throws IOException {
         fileManager.move("C:\\Users\\ihor_PC\\Desktop\\testnew\\moveFrom", "C:\\Users\\ihor_PC\\Desktop\\testnew\\moveTo");
     }
-
 }
 
 

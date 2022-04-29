@@ -38,28 +38,6 @@ public class FileManager {
         copyFileOrDirs(fileToCopy, fileCopied);
     }
 
-    private static void copyFileOrDirs(File from, File to) {
-        if (from.isDirectory()) {
-            if (!to.exists()) {
-                to.mkdir();
-            }
-            String[] files = from.list();
-            for (int i = 0; i < files.length; i++) {
-                copyFileOrDirs(new File(from, files[i]), new File(to, files[i]));
-            }
-        } else {
-            try (FileInputStream fileInputStream = new FileInputStream(from);
-                 FileOutputStream fileOutputStream = new FileOutputStream(to)) {
-                int length = (int) from.length();
-                byte[] buffer = new byte[length];
-                while ((length = fileInputStream.read(buffer)) > 0) {
-                    fileOutputStream.write(buffer, 0, length);
-                }
-            } catch (IOException exception) {
-                throw new RuntimeException("", exception);
-            }
-        }
-    }
 
     // Параметр from - путь к файлу или папке, параметр to - путь к папке куда будет производиться перемищение.
     public void move(String from, String to) {
@@ -79,6 +57,30 @@ public class FileManager {
             files.delete();
         }
         file.delete();
+    }
+
+
+    private static void copyFileOrDirs(File from, File to) {
+        if (from.isDirectory()) {
+            if (!to.exists()) {
+                to.mkdir();
+            }
+            String[] files = from.list();
+            for (int i = 0; i < files.length; i++) {
+                copyFileOrDirs(new File(from, files[i]), new File(to, files[i]));
+            }
+        } else {
+            try (FileInputStream fileInputStream = new FileInputStream(from);
+                 FileOutputStream fileOutputStream = new FileOutputStream(to)) {
+                int length = (int) from.length();
+                byte[] buffer = new byte[length];
+                while ((length = fileInputStream.read(buffer)) > 0) {
+                    fileOutputStream.write(buffer, 0, length);
+                }
+            } catch (IOException exception) {
+                throw new RuntimeException("", exception);// дописать
+            }
+        }
     }
 
     private static void checkNotNull(File[] file) {
