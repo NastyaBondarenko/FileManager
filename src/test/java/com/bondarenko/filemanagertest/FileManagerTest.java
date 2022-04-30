@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class FileManagerTest {
     FileManager fileManager = new FileManager();
@@ -22,6 +23,7 @@ public class FileManagerTest {
         new File("testDirectory/src/dir1").mkdir();
         new File("testDirectory/src/dir1/dir2").mkdir();
         new File("testDirectory2").mkdir();
+        new File("testDirectory3/dir3").mkdir();
         FileOutputStream fileOutputStream = new FileOutputStream("testDirectory/src/dir1/dir2/file1.txt");//отправка даних в файл на диске
         fileOutputStream.write("file1".getBytes());//записує єдиний байт у вихідний потік
         fileOutputStream.close();//закриває вихідний потім, записувать більш не можна
@@ -31,6 +33,7 @@ public class FileManagerTest {
     public void after() {
         fileManager.clean(new File("testDirectory"));
         fileManager.clean(new File("testDirectory2"));
+
     }
 
     @Test
@@ -67,9 +70,33 @@ public class FileManagerTest {
     }
 
     @Test
-    public void testMoveFilesOrDirs() throws IOException {
+    @DisplayName("whe Clean File Content then File Content Is Not Exist")
+    public void whenCleanFileContent_thenFileContentIsNotExist() {
+        assertEquals(2, fileManager.countDirs("testDirectory/src"));
+
+        fileManager.clean(new File("testDirectory/src"));
+
+        assertFalse(new File("testDirectory/src").exists());
+    }
+
+    @Test
+    @DisplayName("")
+    public void testMoveFilesOrDirs() {
+//        String from = "testDirectory/src/dir1/dir2";
+//        String to = "testDirectory2";
+//
+//        assertEquals(1, fileManager.countFiles(from));
+//        assertEquals(0, fileManager.countFiles(to));
+//
+//        fileManager.move(from, to);
+//
+//        assertEquals(1, fileManager.countFiles(from));
+//        assertEquals(1, fileManager.countFiles(to));
+
         fileManager.move("C:\\Users\\ihor_PC\\Desktop\\testnew\\moveFrom", "C:\\Users\\ihor_PC\\Desktop\\testnew\\moveTo");
     }
+
+
 }
 
 
