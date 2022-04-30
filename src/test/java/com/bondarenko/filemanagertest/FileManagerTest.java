@@ -1,10 +1,7 @@
 package com.bondarenko.filemanagertest;
 
 import com.bondarenko.filemanager.FileManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -91,6 +88,15 @@ public class FileManagerTest {
         fileManager.move(dir1.getPath(), dir2.getPath());
 
         assertEquals(3, fileManager.countDirs(dir2.getAbsolutePath()));
+    }
+
+    @Test
+    @DisplayName("when Delete Not Existing File then Null Pointer Exception Returned")
+    public void whenDeleteNotExistingFile_thenNullPointerException_Returned() {
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            File file = null;
+            fileManager.clean(file);
+        });
     }
 }
 
