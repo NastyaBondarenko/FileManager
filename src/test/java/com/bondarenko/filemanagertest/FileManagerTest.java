@@ -14,26 +14,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class FileManagerTest {
+
     FileManager fileManager = new FileManager();
 
     @BeforeEach
-    public void before() throws IOException {//прибрать exception
+    public void before() throws IOException {
         new File("testDirectory").mkdir();
         new File("testDirectory/src").mkdir();
         new File("testDirectory/src/dir1").mkdir();
         new File("testDirectory/src/dir1/dir2").mkdir();
         new File("testDirectory2").mkdir();
-        new File("testDirectory3/dir3").mkdir();
-        FileOutputStream fileOutputStream = new FileOutputStream("testDirectory/src/dir1/dir2/file1.txt");//отправка даних в файл на диске
-        fileOutputStream.write("file1".getBytes());//записує єдиний байт у вихідний потік
-        fileOutputStream.close();//закриває вихідний потім, записувать більш не можна
+        FileOutputStream fileOutputStream = new FileOutputStream("testDirectory/src/dir1/dir2/file1.txt");
+        fileOutputStream.write("file1".getBytes());
+        fileOutputStream.close();
     }
 
     @AfterEach
     public void after() {
         fileManager.clean(new File("testDirectory"));
         fileManager.clean(new File("testDirectory2"));
-
     }
 
     @Test
@@ -70,33 +69,29 @@ public class FileManagerTest {
     }
 
     @Test
-    @DisplayName("whe Clean File Content then File Content Is Not Exist")
+    @DisplayName("whe Clean FileContent then FileContent Is Not Exist")
     public void whenCleanFileContent_thenFileContentIsNotExist() {
-        assertEquals(2, fileManager.countDirs("testDirectory/src"));
+        File dir = new File("testDirectory/src");
 
-        fileManager.clean(new File("testDirectory/src"));
+        assertEquals(2, fileManager.countDirs(dir.getAbsolutePath()));
 
-        assertFalse(new File("testDirectory/src").exists());
+        fileManager.clean(dir);
+
+        assertFalse(dir.exists());
     }
 
     @Test
-    @DisplayName("")
-    public void testMoveFilesOrDirs() {
-//        String from = "testDirectory/src/dir1/dir2";
-//        String to = "testDirectory2";
-//
-//        assertEquals(1, fileManager.countFiles(from));
-//        assertEquals(0, fileManager.countFiles(to));
-//
-//        fileManager.move(from, to);
-//
-//        assertEquals(1, fileManager.countFiles(from));
-//        assertEquals(1, fileManager.countFiles(to));
+    @DisplayName("when Move FileContent then FileContent Is Moved")
+    public void whenMoveFileContent_thenFileContentIsMoved() {
+        File dir1 = new File("testDirectory/src");
+        File dir2 = new File("testDirectory2");
 
-        fileManager.move("C:\\Users\\ihor_PC\\Desktop\\testnew\\moveFrom", "C:\\Users\\ihor_PC\\Desktop\\testnew\\moveTo");
+        assertEquals(0, fileManager.countDirs(dir2.getAbsolutePath()));
+
+        fileManager.move(dir1.getPath(), dir2.getPath());
+
+        assertEquals(3, fileManager.countDirs(dir2.getAbsolutePath()));
     }
-
-
 }
 
 
