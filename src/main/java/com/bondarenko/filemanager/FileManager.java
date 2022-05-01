@@ -1,9 +1,6 @@
 package com.bondarenko.filemanager;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class FileManager {
 
@@ -51,10 +48,35 @@ public class FileManager {
         file.delete();
     }
 
-    public void move(String from, String to) {
+    public void move(String from, String to) {//+-
         File pathFrom = new File(from);
         File pathTo = new File(to, pathFrom.getName());
         pathFrom.renameTo(pathTo);
+    }
+
+    public String readFile(String path) {
+        String text = "";
+        try (FileInputStream fileInputStream = new FileInputStream(path);
+             InputStreamReader inputReader = new InputStreamReader(fileInputStream);
+             BufferedReader bufferReader = new BufferedReader(inputReader)) {
+            String line;
+            while ((line = bufferReader.readLine()) != null) {
+                text += line;
+            }
+            return text;
+        } catch (IOException e) {
+            throw new RuntimeException("The path for keystore file is blank. Provide a valid path");
+        }
+    }
+
+    public File getFile(String path) {
+        File dir = new File(path);
+        for (File file : dir.listFiles()) {
+            if (file.isFile()) {
+                return file;
+            }
+        }
+        throw new RuntimeException("File is not exist");
     }
 
     private static void copyFileContent(File from, File to) {
@@ -75,7 +97,7 @@ public class FileManager {
                     fileOutputStream.write(buffer, 0, length);
                 }
             } catch (IOException exception) {
-                throw new RuntimeException("Cant read or write FileContent", exception);
+                throw new RuntimeException("Cant read fileContent", exception);
             }
         }
     }
