@@ -108,19 +108,6 @@ public class FileManagerTest {
         assertEquals(1, fileManager.countFiles(to));
     }
 
-
-    @Test
-    @DisplayName("whe Clean FileContent then FileContent Is Not Exist")
-    public void whenCleanFileContent_thenFileContentIsNotExist() {
-        File dir = new File("testDirectory/src");
-
-        assertEquals(2, fileManager.countDirs(dir.getAbsolutePath()));
-
-        fileManager.clean(dir);
-
-        assertFalse(dir.exists());
-    }
-
     @Test
     @DisplayName("when Move File then FileContent Is Moved")
     public void whenMoveFile_thenFileContentIsMoved() {
@@ -161,6 +148,18 @@ public class FileManagerTest {
         fileManager.move(dir1.getPath(), dir2.getPath());
 
         assertEquals(1, fileManager.countFiles(dir2.getAbsolutePath()));
+    }
+
+    @Test
+    @DisplayName("whe Clean FileContent then FileContent Is Not Exist")
+    public void whenCleanFileContent_thenFileContentIsNotExist() {
+        File dir = new File("testDirectory/src");
+
+        assertEquals(2, fileManager.countDirs(dir.getAbsolutePath()));
+
+        fileManager.clean(dir);
+
+        assertFalse(dir.exists());
     }
 
     @Test
