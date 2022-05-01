@@ -76,8 +76,8 @@ public class FileManagerTest {
     }
 
     @Test
-    @DisplayName("when Copy File then The Same File Created")
-    public void whenCopyFile_thenTheSameFileCreated() {
+    @DisplayName("when Copy File then The Same Content Created")
+    public void whenCopyFile_thenTheSameFileContentCreated() {
         File fileWhichCopy = new File("testDirectory/src/dir1/dir2/file1.txt");
         String from = "testDirectory/src/dir1/dir2";
         String to = "testDirectory2";
@@ -122,8 +122,24 @@ public class FileManagerTest {
     }
 
     @Test
-    @DisplayName("when Move FileContent then FileContent Is Moved")
-    public void whenMoveFileContent_thenFileContentIsMoved() {
+    @DisplayName("when Move File then FileContent Is Moved")
+    public void whenMoveFile_thenFileContentIsMoved() {
+        String from = "testDirectory/src/dir1/dir2/file1.txt";
+        String to = "testDirectory2";
+
+        String expectedContent = fileManager.readFile(from);
+        fileManager.move(from, to);
+        File movedFile = fileManager.getFile(to);
+
+        String actualContent = fileManager.readFile(movedFile.getAbsolutePath());
+
+        assertEquals(expectedContent, actualContent);
+        assertEquals("Hello world", actualContent);
+    }
+
+    @Test
+    @DisplayName("when Move Dir then Quantity Of Dirs In DirectionDir Increased")
+    public void whenMoveDir_thenQuantityOfDirs_InDirectionDirIncreased() {
         File dir1 = new File("testDirectory/src");
         File dir2 = new File("testDirectory2");
 
@@ -132,6 +148,19 @@ public class FileManagerTest {
         fileManager.move(dir1.getPath(), dir2.getPath());
 
         assertEquals(3, fileManager.countDirs(dir2.getAbsolutePath()));
+    }
+
+    @Test
+    @DisplayName("when Move File then Quantity Of Files In DirectionDir become One More")
+    public void whenMoveFile_thenQuantityOfFiles_InDirectionDir_becomeOneMore() {
+        File dir1 = new File("testDirectory/src/dir1/dir2");
+        File dir2 = new File("testDirectory2");
+
+        assertEquals(0, fileManager.countFiles(dir2.getAbsolutePath()));
+
+        fileManager.move(dir1.getPath(), dir2.getPath());
+
+        assertEquals(1, fileManager.countFiles(dir2.getAbsolutePath()));
     }
 
     @Test
