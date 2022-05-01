@@ -42,7 +42,24 @@ public class FileManagerTest {
     }
 
     @Test
-    @DisplayName("when Count Directories then Quantity Of Directories Returned")
+    @DisplayName("when Count Files In Empty Dir then Quantity Of Files Is Zero")
+    public void whenCountFilesInEmptyDir_thenQuantityOfFilesIsZero() {
+        int expectedCount = 0;
+        int actualCount = fileManager.countFiles("testDirectory2");
+
+        assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    @DisplayName("when Count Files In Not Existing Dir then Null Pointer Exception Returned")
+    public void whenCountFilesInNotExistingDir_thenNullPointerExceptionReturned() {
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            fileManager.countFiles("notExistingDir");
+        });
+    }
+
+    @Test
+    @DisplayName("when Count Dirs then Quantity Of Dirs Returned")
     public void whenCountDirs_thenQuantityOfDirsReturned() {
         int expectedCount = 3;
         int actualCount = fileManager.countDirs("testDirectory");
@@ -51,7 +68,15 @@ public class FileManagerTest {
     }
 
     @Test
-    @DisplayName("when Copy File then Duplicated File Created")
+    @DisplayName("when Count Not Existing Dirs then Null Pointer Exception Returned")
+    public void whenCountNotExistingDirs_thenNullPointerExceptionReturned() {
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            fileManager.countDirs("notExistingDir");
+        });
+    }
+
+    @Test
+    @DisplayName("when Copy File then Duplicated File Created")// не тестить, переробить
     public void whenCopyFile_thenDuplicatedFileCreated() {
         String from = "testDirectory/src/dir1/dir2";
         String to = "testDirectory2";
@@ -91,8 +116,8 @@ public class FileManagerTest {
     }
 
     @Test
-    @DisplayName("when Delete Not Existing File then Null Pointer Exception Returned")
-    public void whenDeleteNotExistingFile_thenNullPointerException_Returned() {
+    @DisplayName("when Clean Not Existing File then NullPointerException Returned")
+    public void whenCleanNotExistingFile_thenNullPointerException_Returned() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             File file = null;
             fileManager.clean(file);
