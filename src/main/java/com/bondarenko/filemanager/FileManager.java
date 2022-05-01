@@ -35,7 +35,7 @@ public class FileManager {
         copyFileContent(fileToCopy, fileCopied);
     }
 
-    public void clean(File file) {
+    public static void clean(File file) {
         File[] list = file.listFiles();
         checkFileIsExisting(list);
         for (File files : list) {
@@ -48,13 +48,13 @@ public class FileManager {
         file.delete();
     }
 
-    public void move(String from, String to) {//+-
+    public static void move(String from, String to) {
         File pathFrom = new File(from);
         File pathTo = new File(to, pathFrom.getName());
         pathFrom.renameTo(pathTo);
     }
 
-    public String readFile(String path) {
+    public static String readFile(String path) {
         String text = "";
         try (FileInputStream fileInputStream = new FileInputStream(path);
              InputStreamReader inputReader = new InputStreamReader(fileInputStream);
@@ -65,11 +65,11 @@ public class FileManager {
             }
             return text;
         } catch (IOException e) {
-            throw new RuntimeException("The path for keystore file is blank. Provide a valid path");
+            throw new RuntimeException("The file`s path is incorrect. Provide a valid path");
         }
     }
 
-    public File getFile(String path) {
+    public static File getFile(String path) {
         File dir = new File(path);
         for (File file : dir.listFiles()) {
             if (file.isFile()) {
