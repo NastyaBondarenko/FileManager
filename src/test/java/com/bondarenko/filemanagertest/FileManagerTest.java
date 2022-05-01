@@ -22,7 +22,7 @@ public class FileManagerTest {
         new File("testDirectory/src/dir1/dir2").mkdir();
         new File("testDirectory2").mkdir();
         FileOutputStream fileOutputStream = new FileOutputStream("testDirectory/src/dir1/dir2/file1.txt");
-        fileOutputStream.write("file1".getBytes());
+        fileOutputStream.write("Hello world".getBytes());
         fileOutputStream.close();
     }
 
@@ -76,8 +76,26 @@ public class FileManagerTest {
     }
 
     @Test
-    @DisplayName("when Copy File then Duplicated File Created")// не тестить, переробить
-    public void whenCopyFile_thenDuplicatedFileCreated() {
+    @DisplayName("when Copy File then The Same File Created")
+    public void whenCopyFile_thenTheSameFileCreated() {
+        File fileWhichCopy = new File("testDirectory/src/dir1/dir2/file1.txt");
+        String from = "testDirectory/src/dir1/dir2";
+        String to = "testDirectory2";
+
+        String expectedContent = fileManager.readFile(fileWhichCopy.getAbsolutePath());
+
+        fileManager.copy(from, to);
+        File copiedFile = fileManager.getFile(to);
+
+        String actualContent = fileManager.readFile(copiedFile.getAbsolutePath());
+
+        assertEquals(expectedContent, actualContent);
+        assertEquals("Hello world", actualContent);
+    }
+
+    @Test
+    @DisplayName("when Copy File then Quantity Of Files In Direction Dir Increased")
+    public void whenCopyFile_thenQuantityOfFiles_InDirectionDirIncreased() {
         String from = "testDirectory/src/dir1/dir2";
         String to = "testDirectory2";
 
@@ -89,6 +107,7 @@ public class FileManagerTest {
         assertEquals(1, fileManager.countFiles(from));
         assertEquals(1, fileManager.countFiles(to));
     }
+
 
     @Test
     @DisplayName("whe Clean FileContent then FileContent Is Not Exist")
