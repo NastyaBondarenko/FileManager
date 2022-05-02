@@ -1,6 +1,5 @@
-package com.bondarenko.filemanagertest;
+package com.bondarenko.filemanager;
 
-import com.bondarenko.filemanager.FileManager;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
